@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launcher label. Change to something innocuous such as
+         "Smart Tools" for maximum stealth (see README → Stealth checklist). -->
+    <string name="app_name">Canary Vault</string>
+
+    <string name="device_admin_label">Canary Duress Lock</string>
+    <string name="device_admin_description">Allow emergency factory reset when the duress PIN is entered under coercion.</string>
+
+    <string name="accessibility_service_description">Canary Duress Lock can detect duress triggers at system level (for example when the phone is being inspected). This is optional, off by default, and never reads message content.</string>
+</resources>

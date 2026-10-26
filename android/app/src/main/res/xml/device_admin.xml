@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies>
+        <!-- Wipe device data — factory reset on duress trigger -->
+        <wipe-data />
+        <!-- Force lock — immediate screen lock -->
+        <force-lock />
+        <!-- Reset password — clear credentials -->
+        <reset-password />
+        <!-- Watch login — detect failed attempts -->
+        <watch-login />
+    </uses-policies>
+</device-admin>

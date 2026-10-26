@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Vault data must NEVER be backed up to cloud -->
+        <exclude domain="sharedpref" path="FlutterSharedPreferences.xml" />
+        <exclude domain="sharedpref" path="FlutterSecureStorage.xml" />
+        <exclude domain="sharedpref" path="canary_vault_prefs.xml" />
+        <exclude domain="database" path="canary_vault_box.hive" />
+        <exclude domain="database" path="canary_meta_box.hive" />
+        <exclude domain="file" path="app_flutter/canary/" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="FlutterSharedPreferences.xml" />
+        <exclude domain="sharedpref" path="FlutterSecureStorage.xml" />
+        <exclude domain="database" path="canary_vault_box.hive" />
+    </device-transfer>
+</data-extraction-rules>
