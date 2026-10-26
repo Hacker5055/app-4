@@ -1,0 +1,119 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CANARY DURESS LOCK — Permissions & Security Declarations
+         ═══════════════════════════════════════════════════════════════
+         The two privileged permissions below are *enforced* through the
+         component-level `android:permission` attributes on the receiver
+         and service (that is what actually binds the OS to the app).
+         They are also declared here so audits and store listings see the
+         full capability surface up front.
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Device Admin — optional hard wipe via DevicePolicyManager -->
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
+
+    <!-- Accessibility — optional system-level duress monitor (off by default) -->
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+
+    <!-- Biometric / cryptographic hardware -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- Haptics on PIN entry -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Hardware features (all optional — the app degrades gracefully) -->
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.strongbox_keystore"
+        android:required="false" />
+
+    <!-- NOTE: there is no `USE_KEYSTORE` Android permission. Hardware-backed
+         keys come from the OS-level `AndroidKeyStore` provider, which needs no
+         runtime grant. Keystore access is exercised via KeyStoreManager.kt. -->
+
+    <application
+        android:label="@string/app_name"
+        android:name="${applicationName}"
+        android:icon="@mipmap/launcher_icon"
+        android:roundIcon="@mipmap/launcher_icon"
+        android:theme="@style/LaunchTheme"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:requestLegacyExternalStorage="false"
+        android:usesCleartextTraffic="false"
+        android:hardwareAccelerated="true">
+
+        <!-- ═══ Main Flutter Activity ═══ -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+        </activity>
+
+        <!-- ═══ Device Admin Receiver — hard wipe capability ═══ -->
+        <receiver
+            android:name=".security.CanaryDeviceAdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            android:exported="true"
+            android:label="@string/device_admin_label"
+            android:description="@string/device_admin_description">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLE_REQUESTED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ═══ Duress broadcast receiver — internal only ═══ -->
+        <receiver
+            android:name=".security.DuressTriggerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.canary.duresslock.ACTION_DURESS_TRIGGER" />
+                <action android:name="com.canary.duresslock.ACTION_DURESS_PURGE_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- ═══ Accessibility service — optional, user-activated ═══ -->
+        <service
+            android:name=".security.AccessibilityMonitorService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service" />
+        </service>
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+    </application>
+
+</manifest>
