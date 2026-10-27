@@ -14,6 +14,37 @@ Flutter 3.22+  ·  Kotlin 1.9  ·  Android 6.0+ (API 23)  ·  ARM64 release APK
 
 ---
 
+## ⬇️ Signed APK
+
+**[`dist/CanaryDuressLock-v1.0.0.apk`](dist/CanaryDuressLock-v1.0.0.apk)** — 781 KB, signed (v1 + v2 + v3), ready to install.
+
+```bash
+adb install -r dist/CanaryDuressLock-v1.0.0.apk
+# or copy it to the phone and tap it (allow "install unknown apps" for your file manager)
+```
+
+| | |
+|---|---|
+| Package | `com.canary.duresslock` |
+| Version | 1.0.0 (versionCode 1) |
+| Min / target SDK | 23 (Android 6.0) / 34 |
+| ABIs | architecture-independent (pure DEX, no native libs) — arm64-v8a, armeabi-v7a, x86_64 |
+| SHA-256 | `dba33db328a012fcb449aeceff2f8c6bb4f1dbe2cd597a75da8c67a319350fba` |
+
+**First launch:** wizard asks for a master PIN → duress PIN → response action.
+Use `123456` / `654321` if you just want to look around — mock testing mode is **on** by default, so
+the duress path logs the purge instead of destroying anything.
+
+**This APK is the native Kotlin build** (see [`native/`](native)), not the Flutter build. The Flutter
+engine, Dart SDK and Gradle plugins all live on hosts that were unreachable while this session ran,
+so the Flutter APK could not be compiled here — `native/` reproduces the full flow and the same
+`security/` Kotlin sources with framework views only, and builds with just a JDK + `build-tools` +
+`kotlinc`. For the Flutter APK run `flutter build apk --release --target-platform android-arm64`
+(see [BUILD.md](BUILD.md)); a workflow that does this for you is in
+[`.github/workflows/build-apk.yml`](.github/workflows/build-apk.yml).
+
+---
+
 ## Live preview
 
 An interactive, high-fidelity simulation of the whole flow (lock gate → vault → duress purge →

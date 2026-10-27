@@ -18,6 +18,10 @@ android/keystore.properties
 *.jks
 *.keystore
 
+# ── Native APK module ──
+native/build/
+native/*.jks
+
 # ── Web preview ──
 web_preview/node_modules/
 web_preview/dist/

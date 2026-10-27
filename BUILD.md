@@ -148,3 +148,28 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: canary-arm64-apk, path: build/app/outputs/flutter-apk/*.apk }
 ```
+
+---
+
+## 10. Native APK module (no Flutter toolchain required)
+
+If you only need an installable APK — or the Flutter engine artifacts are unreachable from your
+network — `native/` builds the same app from Kotlin sources with framework views only.
+
+```bash
+export JAVA_HOME=/path/to/jdk-17
+export ANDROID_JAR=$ANDROID_HOME/platforms/android-34/android.jar
+export BUILD_TOOLS=$ANDROID_HOME/build-tools/34.0.0
+export KOTLINC=/path/to/kotlin/bin/kotlinc
+
+cd native && ./build.sh
+# → native/build/CanaryDuressLock-v1.0.0.apk   (signed, v1+v2+v3)
+```
+
+Pipeline: `aapt2 compile` → `aapt2 link` → `kotlinc` → `d8 --min-api 23` → `zip classes.dex` →
+`zipalign -p 4` → `apksigner sign`. No Gradle, no AGP, no Flutter engine, no AndroidX.
+
+Prebuilt artifact in this repo: `dist/CanaryDuressLock-v1.0.0.apk`
+(`sha256 dba33db328a012fcb449aeceff2f8c6bb4f1dbe2cd597a75da8c67a319350fba`).
+
+Details and file map: [native/README.md](native/README.md).
